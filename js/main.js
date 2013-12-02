@@ -1,6 +1,7 @@
 TrashGame = {};
 
 TrashGame.init = function(){
+	$('#loading').hide();
 	TrashGame.monster.initOffset = TrashGame.monster.domElem.offset().left;
 	for(var i = 0; i < TrashGame.trashAmount; i++) {
 		var t = $('<img width="'+TrashGame.trashWidth+'" />');
@@ -12,7 +13,20 @@ TrashGame.init = function(){
 		e.preventDefault();
 		TrashGame.trashElem.children().removeClass('clicked');
 		$(this).addClass('clicked');
-	})
+	});
+	$('.bin > img').click(function(e){
+		var clickedElem = TrashGame.trashElem.children('.clicked');
+		var parent = $(this).parent();
+		if(clickedElem.length > 0) {
+			clickedElem.removeClass('clicked');
+			clickedElem.css('visibility', 'hidden');
+			if(clickedElem.hasClass(parent[0].id)) {
+				TrashGame.getTrashTypeByKind(parent[0].id).onBin();
+			} else {
+				parent.children('.maintenance').show().fadeOut(3000, 'easeInExpo');
+			}
+		}
+	});
 	$(document).keyup(function(e) {
 		if(e.which == 80) { //80 is p, for pause
 			TrashGame.triggerPause();
@@ -20,12 +34,26 @@ TrashGame.init = function(){
 	});
 	setInterval(TrashGame.draw, TrashGame.frameRate);
 };
+TrashGame.getTrashTypeByKind = function(kind) {
+	for(i = 0, j = TrashGame.trashTypes.length; i < j; i++) {
+		if(TrashGame.trashTypes[i].kind === kind) return TrashGame.trashTypes[i];
+	}
+};
 
 TrashGame.draw = function(){
 	if(!TrashGame.paused) {
 		TrashGame.moveBckg(TrashGame.track);
 		TrashGame.moveBckg(TrashGame.background);
-		TrashGame.monster.acum += TrashGame.monster.speed;
+		TrashGame.bushes.children().each(function(i,e) {
+			var elem = $(e);
+			var left = elem.position().left - TrashGame.track.speed;
+			var stillIn = left >= -TrashGame.bushWidth;
+			elem.css('left', left);
+			if(!stillIn) {
+				elem.remove();
+			}
+		});
+		if(TrashGame.bushes.children().length === 0) TrashGame.monster.acum += TrashGame.monster.speed;
 		if(TrashGame.monster.acum >= 1) {
 			var monsterOffset = TrashGame.monster.domElem.offset().left;
 			TrashGame.monster.domElem.offset({left: monsterOffset+1});
@@ -34,7 +62,7 @@ TrashGame.draw = function(){
 				if(confirm('You lose!\n\nReload?')){
 					location.reload();
 				} else {
-
+					TrashGame.reset();
 				}
 				//TrashGame.reset();
 			}
@@ -69,7 +97,7 @@ TrashGame.moveBckg = function(elem) {
 };
 TrashGame.monster = {
 	domElem: $('#monster'),
-	speed: 0.3,
+	speed: 0.2,
 	acum: 0,
 	threshold: 415,
 	initOffset: null
@@ -85,36 +113,52 @@ TrashGame.trashTypes = [
  			'http://s3.amazonaws.com/rapgenius/1360985415_captain-crunch.jpg',
  			'http://www.staceyreid.com/news/wp-content/uploads/2011/06/milk_carton.png',
  			'http://yourdesignmagazine.com/wp-content/uploads/2013/02/comics_512x512.png'
- 		]
+ 		],
+ 		onBin: function(){
+			TrashGame.score += 5;
+			$('#score').children().height(TrashGame.score + '%');
+			if(TrashGame.score >= 100) {
+				if(confirm('CONGRATULATIONS! You win!\n\nReload?')){
+					location.reload();
+				} else {
+					TrashGame.reset();
+				}
+			}
+ 		}
  	},{
 		kind: 'organic',
 		imgs: [
 			'http://images.clipartlogo.com/files/images/19/191023/apple-core_p',
 			'http://www.binaryfeast.com/tl_files/binary_feast/sbt_banana.png'
-		]
+		],
+		onBin: function(){
+			TrashGame.bushes.append('<img class="bush" src="http://images1.wikia.nocookie.net/__cb20130827065518/clubpenguin/images/c/ca/Bushes-transparent.png", width="'+TrashGame.bushWidth+'" />');
+		}
 	}
 ];
 TrashGame.trashWidth = 50;
 TrashGame.trashSeparation = 150;
 TrashGame.trashAmount = Math.ceil($('#main').width() / TrashGame.trashSeparation);
 TrashGame.trashElem = $('#trash');
+TrashGame.bushes = $('#bushes');
 TrashGame.lastTrashPosition = null;
 TrashGame.initialTrashPosition = $('#main').width();
 TrashGame.paused = false;
 TrashGame.score = 0;
+TrashGame.bushWidth = 250;
 TrashGame.randomizeTrash = function(elem){
 	var trashType = TrashGame.trashTypes[Math.round(Math.random())];
 	elem.attr({
 		'class': trashType.kind,
 		'src': trashType.imgs[Math.floor(Math.random() * trashType.imgs.length)]
 	});
-	elem.show();
+	elem.css('visibility', 'visible');
 };
 TrashGame.triggerPause = function() {
 	TrashGame.paused = !TrashGame.paused;
 	$('#pause').toggle();
 };
 
-$(function() {
+$( window ).load(function() {
 	TrashGame.init();
 });
