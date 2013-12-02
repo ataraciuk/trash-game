@@ -112,7 +112,7 @@ TrashGame.trashTypes = [
  			'http://vector-magz.com/wp-content/uploads/2013/10/juice-box-clip-art1.png',
  			'http://s3.amazonaws.com/rapgenius/1360985415_captain-crunch.jpg',
  			'http://www.staceyreid.com/news/wp-content/uploads/2011/06/milk_carton.png',
- 			'http://yourdesignmagazine.com/wp-content/uploads/2013/02/comics_512x512.png'
+ 			'img/comics_512x512.png'
  		],
  		onBin: function(){
 			TrashGame.score += 5;
