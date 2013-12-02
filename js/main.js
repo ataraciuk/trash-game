@@ -23,16 +23,20 @@ TrashGame.init = function(){
 
 TrashGame.draw = function(){
 	if(!TrashGame.paused) {
-		TrashGame.track.lastPos-= TrashGame.track.speed;
-		TrashGame.track.domElem.css('background-position', TrashGame.track.lastPos+'px 0');
+		TrashGame.moveBckg(TrashGame.track);
+		TrashGame.moveBckg(TrashGame.background);
 		TrashGame.monster.acum += TrashGame.monster.speed;
 		if(TrashGame.monster.acum >= 1) {
 			var monsterOffset = TrashGame.monster.domElem.offset().left;
 			TrashGame.monster.domElem.offset({left: monsterOffset+1});
 			TrashGame.monster.acum -= 1;
 			if(monsterOffset >= TrashGame.monster.threshold) {
-				alert('You lose!');
-				TrashGame.reset();
+				if(confirm('You lose!\n\nReload?')){
+					location.reload();
+				} else {
+
+				}
+				//TrashGame.reset();
 			}
 		}
 		TrashGame.trashElem.children().each(function(i,e){
@@ -53,13 +57,23 @@ TrashGame.track = {
 	speed: 3,
 	lastPos: 0
 };
+TrashGame.background = {
+	domElem: $('#main'),
+	speed: 1,
+	lastPos: 0
+};
+TrashGame.moveBckg = function(elem) {
+	elem.lastPos-= elem.speed;
+	yPos = elem.domElem.css('background-position').split(' ')[1];
+	elem.domElem.css('background-position', elem.lastPos+'px '+yPos);
+};
 TrashGame.monster = {
 	domElem: $('#monster'),
 	speed: 0.3,
 	acum: 0,
 	threshold: 415,
 	initOffset: null
-}
+};
 TrashGame.reset = function() {
 	TrashGame.monster.domElem.offset({left: TrashGame.monster.initOffset});
 };
@@ -87,6 +101,7 @@ TrashGame.trashElem = $('#trash');
 TrashGame.lastTrashPosition = null;
 TrashGame.initialTrashPosition = $('#main').width();
 TrashGame.paused = false;
+TrashGame.score = 0;
 TrashGame.randomizeTrash = function(elem){
 	var trashType = TrashGame.trashTypes[Math.round(Math.random())];
 	elem.attr({
@@ -98,7 +113,7 @@ TrashGame.randomizeTrash = function(elem){
 TrashGame.triggerPause = function() {
 	TrashGame.paused = !TrashGame.paused;
 	$('#pause').toggle();
-}
+};
 
 $(function() {
 	TrashGame.init();

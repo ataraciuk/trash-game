@@ -5,6 +5,9 @@
 	margin: 10px auto;
 	border: 1px solid black;
 	position: relative;
+	background: url('http://thumbs.dreamstime.com/x/endless-landscape-18771876.jpg') repeat-x;
+	background-color: #abe0f3;
+	background-position: 0px 200px;
 }
 
 body{
@@ -23,7 +26,7 @@ h1 {
 	height: 120px;
 	width: 100%;
 	background: url('http://img.stockfresh.com/files/t/tashatuvango/x/36/2732965_67415523.jpg');
-	border-top: 4px solid black;
+	border-top: 1px solid black;
 }
 
 #character {
@@ -47,6 +50,10 @@ h1 {
 	cursor: pointer;
 	padding: 10px;
 }
+#trash > img:hover {
+	background-color: rgba(255,255,255,0.2);
+	border-radius: 7px;
+}
 #trash > img.clicked {
 	background-color: rgba(255,255,0,0.7);
 	border-radius: 7px;
@@ -66,4 +73,34 @@ h1 {
 	padding: 40px;
 	border-radius: 20px;
 	width: 200px;
+}
+.bin{
+	padding: 10px;
+	cursor: pointer;
+	top: 10px;
+}
+.bin:hover{
+	background-color: rgba(255,255,0,0.2);
+	border-radius: 7px;	
+}
+#paper {
+	left: 140px;
+}
+#organic {
+	left: 280px;
+}
+#score {
+	background-color: #881111;
+	border-radius: 5px;
+	width: 50px;
+	height: 150px;
+	left: 20px;
+	position: absolute;
+	top:20px;
+	overflow: hidden;
+}
+#score > div {
+	position: absolute;
+	bottom: 0px;
+	width: 100%;
 }
