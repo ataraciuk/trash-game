@@ -13,31 +13,38 @@ TrashGame.init = function(){
 		TrashGame.trashElem.children().removeClass('clicked');
 		$(this).addClass('clicked');
 	})
+	$(document).keyup(function(e) {
+		if(e.which == 80) { //80 is p, for pause
+			TrashGame.triggerPause();
+		}
+	});
 	setInterval(TrashGame.draw, TrashGame.frameRate);
 };
 
 TrashGame.draw = function(){
-	TrashGame.track.lastPos-= TrashGame.track.speed;
-	TrashGame.track.domElem.css('background-position', TrashGame.track.lastPos+'px 0');
-	TrashGame.monster.acum += TrashGame.monster.speed;
-	if(TrashGame.monster.acum >= 1) {
-		var monsterOffset = TrashGame.monster.domElem.offset().left;
-		TrashGame.monster.domElem.offset({left: monsterOffset+1});
-		TrashGame.monster.acum -= 1;
-		if(monsterOffset >= TrashGame.monster.threshold) {
-			alert('You lose!');
-			TrashGame.reset();
+	if(!TrashGame.paused) {
+		TrashGame.track.lastPos-= TrashGame.track.speed;
+		TrashGame.track.domElem.css('background-position', TrashGame.track.lastPos+'px 0');
+		TrashGame.monster.acum += TrashGame.monster.speed;
+		if(TrashGame.monster.acum >= 1) {
+			var monsterOffset = TrashGame.monster.domElem.offset().left;
+			TrashGame.monster.domElem.offset({left: monsterOffset+1});
+			TrashGame.monster.acum -= 1;
+			if(monsterOffset >= TrashGame.monster.threshold) {
+				alert('You lose!');
+				TrashGame.reset();
+			}
 		}
+		TrashGame.trashElem.children().each(function(i,e){
+			var elem = $(e);
+			var left = elem.position().left - TrashGame.track.speed;
+			var stillIn = left >= -TrashGame.trashWidth -20;
+			elem.css('left', stillIn ? left : TrashGame.initialTrashPosition + 'px');
+			if(!stillIn) {
+				TrashGame.randomizeTrash(elem);
+			}
+		});
 	}
-	TrashGame.trashElem.children().each(function(i,e){
-		var elem = $(e);
-		var left = elem.position().left - TrashGame.track.speed;
-		var stillIn = left >= -TrashGame.trashWidth -20;
-		elem.css('left', stillIn ? left : TrashGame.initialTrashPosition + 'px');
-		if(!stillIn) {
-			TrashGame.randomizeTrash(elem);
-		}
-	});
 };
 
 TrashGame.frameRate = Math.floor(1000 / 30); //time if we want a 30 frameRate
@@ -79,6 +86,7 @@ TrashGame.trashAmount = Math.ceil($('#main').width() / TrashGame.trashSeparation
 TrashGame.trashElem = $('#trash');
 TrashGame.lastTrashPosition = null;
 TrashGame.initialTrashPosition = $('#main').width();
+TrashGame.paused = false;
 TrashGame.randomizeTrash = function(elem){
 	var trashType = TrashGame.trashTypes[Math.round(Math.random())];
 	elem.attr({
@@ -87,6 +95,10 @@ TrashGame.randomizeTrash = function(elem){
 	});
 	elem.show();
 };
+TrashGame.triggerPause = function() {
+	TrashGame.paused = !TrashGame.paused;
+	$('#pause').toggle();
+}
 
 $(function() {
 	TrashGame.init();
