@@ -83,10 +83,13 @@ h1 {
 .bin > img {
 	display: block;
 	padding: 10px;
-	cursor: pointer;
 }
-.bin> img:hover{
-	background-color: rgba(255,255,0,0.2);
+.bin > img.onActive{
+	background-color: rgba(255,255,255,0.4);
+	border-radius: 7px;
+}
+.bin > img.onHover{
+	background-color: rgba(255,255,0,0.4);
 	border-radius: 7px;	
 }
 #paper {

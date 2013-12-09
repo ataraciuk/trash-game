@@ -9,21 +9,20 @@ TrashGame.init = function(){
 		TrashGame.randomizeTrash(t);
 		TrashGame.trashElem.append(t);
 	}
-	TrashGame.trashElem.children().click(function(e){
-		e.preventDefault();
-		TrashGame.trashElem.children().removeClass('clicked');
-		$(this).addClass('clicked');
-	});
-	$('.bin > img').click(function(e){
-		var clickedElem = TrashGame.trashElem.children('.clicked');
-		var parent = $(this).parent();
-		if(clickedElem.length > 0) {
-			clickedElem.removeClass('clicked');
+	TrashGame.trashElem.children().draggable({ opacity: 0.5, helper: "clone", appendTo: "body", cursor: 'pointer', cursorAt: {left: TrashGame.trashWidth / 2} });
+	$('.bin > img').droppable({
+		hoverClass: 'onHover',
+		activeClass: "onActive",
+		drop: function( event, ui ) {
+			var parent = $(this).parent(), clickedElem = ui.draggable;
 			clickedElem.css('visibility', 'hidden');
 			if(clickedElem.hasClass(parent[0].id)) {
 				TrashGame.getTrashTypeByKind(parent[0].id).onBin();
 			} else {
-				parent.children('.maintenance').show().fadeOut(3000, 'easeInExpo');
+				$(this).droppable('disable');
+				parent.children('.maintenance').show().fadeOut(3000, 'easeInExpo', function(){
+					$(this).prev().droppable('enable');
+				});
 			}
 		}
 	});
