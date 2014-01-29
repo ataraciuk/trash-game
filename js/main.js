@@ -2,6 +2,7 @@ TrashGame = {};
 
 TrashGame.init = function(){
 	$('#loading').hide();
+	TrashGame.triggerPause();
 	TrashGame.monster.initOffset = TrashGame.monster.domElem.offset().left;
 	for(var i = 0; i < TrashGame.trashAmount; i++) {
 		var t = $('<img width="'+TrashGame.trashWidth+'" />');
@@ -31,6 +32,7 @@ TrashGame.init = function(){
 			TrashGame.triggerPause();
 		}
 	});
+	$('.pauseBtn').click(TrashGame.triggerPause);
 	setInterval(TrashGame.draw, TrashGame.frameRate);
 };
 TrashGame.getTrashTypeByKind = function(kind) {
