@@ -57,7 +57,7 @@ TrashGame.draw = function(){
 			var monsterOffset = TrashGame.monster.domElem.offset().left;
 			TrashGame.monster.domElem.offset({left: monsterOffset+1});
 			TrashGame.monster.acum -= 1;
-			if(monsterOffset >= TrashGame.monster.threshold) {
+			if(monsterOffset - TrashGame.monster.domElem.parent().offset().left >= TrashGame.monster.threshold) {
 				if(confirm('You lose!\n\nReload?')){
 					location.reload();
 				} else {
@@ -98,7 +98,7 @@ TrashGame.monster = {
 	domElem: $('#monster'),
 	speed: 0.2,
 	acum: 0,
-	threshold: 415,
+	threshold: 15,
 	initOffset: null
 };
 TrashGame.reset = function() {
