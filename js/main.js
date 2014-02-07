@@ -89,7 +89,7 @@ TrashGame.track = {
 };
 TrashGame.background = {
 	domElem: $('#main'),
-	speed: 1,
+	speed: 3,
 	lastPos: 0
 };
 TrashGame.moveBckg = function(elem) {
