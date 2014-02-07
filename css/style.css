@@ -5,9 +5,10 @@
 	margin: 10px auto;
 	border: 1px solid black;
 	position: relative;
-	background: url('http://thumbs.dreamstime.com/x/endless-landscape-18771876.jpg') repeat-x;
-	background-color: #abe0f3;
+	background: url('../img/BG+forest.png') repeat-x;
+	background-color: #22aaFF;
 	background-position: 0px 200px;
+	background-size:contain;
 }
 
 body{
@@ -43,7 +44,7 @@ h1 {
 	position: absolute;
 }
 #trash {
-	bottom: 150px;
+	bottom: 120px;
 }
 #trash > img {
 	position: absolute;

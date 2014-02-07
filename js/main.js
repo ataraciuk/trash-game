@@ -33,6 +33,7 @@ TrashGame.init = function(){
 		}
 	});
 	$('.pauseBtn').click(TrashGame.triggerPause);
+	TrashGame.monster.run();
 	setInterval(TrashGame.draw, TrashGame.frameRate);
 };
 TrashGame.getTrashTypeByKind = function(kind) {
@@ -43,11 +44,11 @@ TrashGame.getTrashTypeByKind = function(kind) {
 
 TrashGame.draw = function(){
 	if(!TrashGame.paused) {
-		TrashGame.moveBckg(TrashGame.track);
+		//TrashGame.moveBckg(TrashGame.track);
 		TrashGame.moveBckg(TrashGame.background);
 		TrashGame.bushes.children().each(function(i,e) {
 			var elem = $(e);
-			var left = elem.position().left - TrashGame.track.speed;
+			var left = elem.position().left - TrashGame.background.speed;
 			var stillIn = left >= -TrashGame.bushWidth;
 			elem.css('left', left);
 			if(!stillIn) {
@@ -70,7 +71,7 @@ TrashGame.draw = function(){
 		}
 		TrashGame.trashElem.children().each(function(i,e){
 			var elem = $(e);
-			var left = elem.position().left - TrashGame.track.speed;
+			var left = elem.position().left - TrashGame.background.speed;
 			var stillIn = left >= -TrashGame.trashWidth -20;
 			elem.css('left', stillIn ? left : TrashGame.initialTrashPosition + 'px');
 			if(!stillIn) {
@@ -101,7 +102,15 @@ TrashGame.monster = {
 	speed: 0.2,
 	acum: 0,
 	threshold: 15,
-	initOffset: null
+	initOffset: null,
+	images: ['monster+1.gif', 'monster+2.gif'],
+	currentImage: 0,
+	run: function(){
+		setInterval(function(){
+			TrashGame.monster.currentImage = (TrashGame.monster.currentImage + 1) % TrashGame.monster.images.length;
+			TrashGame.monster.domElem.children().attr('src', 'img/'+TrashGame.monster.images[TrashGame.monster.currentImage]);
+		}, TrashGame.frameRate * 5);
+	}
 };
 TrashGame.reset = function() {
 	TrashGame.monster.domElem.offset({left: TrashGame.monster.initOffset});
