@@ -33,7 +33,8 @@ TrashGame.init = function(){
 		}
 	});
 	$('.pauseBtn').click(TrashGame.triggerPause);
-	TrashGame.monster.run();
+	TrashGame.run(TrashGame.monster, 4);
+	TrashGame.run(TrashGame.character, 4);
 	setInterval(TrashGame.draw, TrashGame.frameRate);
 };
 TrashGame.getTrashTypeByKind = function(kind) {
@@ -103,14 +104,19 @@ TrashGame.monster = {
 	acum: 0,
 	threshold: 15,
 	initOffset: null,
-	images: ['monster+1.gif', 'monster+2.gif'],
-	currentImage: 0,
-	run: function(){
-		setInterval(function(){
-			TrashGame.monster.currentImage = (TrashGame.monster.currentImage + 1) % TrashGame.monster.images.length;
-			TrashGame.monster.domElem.children().attr('src', 'img/'+TrashGame.monster.images[TrashGame.monster.currentImage]);
-		}, TrashGame.frameRate * 5);
-	}
+	images: ['monster+1.gif', 'monster+3.gif', 'monster+2.gif'],
+	currentImage: 0
+};
+TrashGame.character = {
+	domElem: $('#character'),
+	images: ['runner+1.gif','runner+2.gif'],
+	currentImage: 0
+};
+TrashGame.run = function(obj, speed) {
+	setInterval(function(){
+		obj.currentImage = (obj.currentImage + 1) % obj.images.length;
+		obj.domElem.children().attr('src', 'img/'+obj.images[obj.currentImage]);
+	}, TrashGame.frameRate * speed);
 };
 TrashGame.reset = function() {
 	TrashGame.monster.domElem.offset({left: TrashGame.monster.initOffset});
@@ -119,10 +125,9 @@ TrashGame.trashTypes = [
 	{
  		kind: 'paper',
  		imgs: [
- 			'http://vector-magz.com/wp-content/uploads/2013/10/juice-box-clip-art1.png',
- 			'http://s3.amazonaws.com/rapgenius/1360985415_captain-crunch.jpg',
- 			'http://www.staceyreid.com/news/wp-content/uploads/2011/06/milk_carton.png',
- 			'img/comics_512x512.png'
+ 			'img/comic+book.png',
+ 			'img/juice+carton.png',
+ 			'img/Milk.png'
  		],
  		onBin: function(){
 			TrashGame.score += 5;
@@ -138,11 +143,11 @@ TrashGame.trashTypes = [
  	},{
 		kind: 'organic',
 		imgs: [
-			'http://images.clipartlogo.com/files/images/19/191023/apple-core_p',
-			'http://www.binaryfeast.com/tl_files/binary_feast/sbt_banana.png'
+			'img/Apple.png',
+			'img/banana.png'
 		],
 		onBin: function(){
-			TrashGame.bushes.append('<img class="bush" src="http://images1.wikia.nocookie.net/__cb20130827065518/clubpenguin/images/c/ca/Bushes-transparent.png", width="'+TrashGame.bushWidth+'" />');
+			TrashGame.bushes.append('<img class="bush" src="img/Shrubs.png", width="'+TrashGame.bushWidth+'" />');
 		}
 	}
 ];
