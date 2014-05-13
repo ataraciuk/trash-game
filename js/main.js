@@ -32,7 +32,7 @@ TrashGame.init = function(){
 			TrashGame.triggerPause();
 		}
 	});
-	$('.pauseBtn').click(TrashGame.triggerPause);
+	$('.pauseBtn, #pause').click(TrashGame.triggerPause);
 	TrashGame.run(TrashGame.monster, 4);
 	TrashGame.run(TrashGame.character, 4);
 	setInterval(TrashGame.draw, TrashGame.frameRate);
